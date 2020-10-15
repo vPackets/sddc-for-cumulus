@@ -1,0 +1,216 @@
+#Make sure to edit /etc/ansible/hosts to include the right hostname for your cumulus. 
+# I've add the following:
+# [cumulus]
+# cumulus-l-02 ansible_ssh_user=cumulus ansible_ssh_pass=password 
+# Also make sure host is resolvable in DNS or /etc/hosts.
+# Also make sure you are able to connect to the Cumulus Router using SSH. 
+
+
+
+
+# ansible-playbook -k --ask-become-pass --extra-vars "ansible_user=nmichel" deploy.yml
+
+---
+- hosts: cumulus-tor01
+
+  tasks:
+    - name: Set hostname.
+      nclu:
+        commands:
+          - add hostname TOR-01
+        commit: true
+    
+    - name: Add Interfaces towards NSX and Spine
+      nclu:
+        commands:
+          - add interface swp1
+          - add interface swp1.10
+          - add interface swp1.10 alias BGP to EN01 - EN02
+          - add interface swp1.10 ip address 172.16.10.10/24
+          
+          - add interface swp2
+          - add interface swp2.5
+          - add interface swp2.5 alias BGP to Cumulus Spine
+          - add interface swp2.5 ip address 172.16.5.10/24
+        commit: true 
+  
+    - name: Add BGP router & neighbors
+      nclu:
+        commands:
+          - add bgp autonomous-system 65100
+          - add bgp neighbor 172.16.10.1 remote-as 65000
+          - add bgp neighbor 172.16.10.2 remote-as 65000
+          - add bgp neighbor 172.16.5.1 remote-as 65500
+        commit: true
+
+    - name: Configure Route Redistribution
+      nclu:
+        commands:
+          - add bgp redistribute connected
+          - add bgp redistribute static
+        commit: true
+
+
+
+- hosts: cumulus-tor02
+
+  tasks:
+    - name: Set hostname.
+      nclu:
+        commands:
+          - add hostname TOR-02
+        commit: true
+    
+    - name: Add Interfaces towards NSX and Spine
+      nclu:
+        commands:
+          - add interface swp1
+          - add interface swp1.20
+          - add interface swp1.20 alias BGP to EN01 - EN02
+          - add interface swp1.20 ip address 172.16.20.11/24
+          
+          - add interface swp2
+          - add interface swp2.5
+          - add interface swp2.5 alias BGP to Cumulus Spine
+          - add interface swp2.5 ip address 172.16.5.11/24
+        commit: true 
+  
+    - name: Add BGP router & neighbors
+      nclu:
+        commands:
+          - add bgp autonomous-system 65200
+          - add bgp neighbor 172.16.20.1 remote-as 65000
+          - add bgp neighbor 172.16.20.2 remote-as 65000
+          - add bgp neighbor 172.16.5.1 remote-as 65500
+        commit: true
+
+    - name: Configure Route Redistribution
+      nclu:
+        commands:
+          - add bgp redistribute connected
+          - add bgp redistribute static
+        commit: true
+
+
+
+- hosts: cumulus-tor03
+
+  tasks:
+    - name: Set hostname.
+      nclu:
+        commands:
+          - add hostname TOR-03
+        commit: true
+    
+    - name: Add Interfaces towards NSX and Spine
+      nclu:
+        commands:
+          - add interface swp1
+          - add interface swp1.10
+          - add interface swp1.10 alias BGP to EN03 - EN04
+          - add interface swp1.10 ip address 172.16.10.20/24
+          
+          - add interface swp2
+          - add interface swp2.5
+          - add interface swp2.5 alias BGP to Cumulus Spine
+          - add interface swp2.5 ip address 172.16.5.20/24
+        commit: true 
+  
+    - name: Add BGP router & neighbors
+      nclu:
+        commands:
+          - add bgp autonomous-system 65101
+          - add bgp neighbor 172.16.10.3 remote-as 65001
+          - add bgp neighbor 172.16.10.4 remote-as 65001
+          - add bgp neighbor 172.16.5.1 remote-as 65500
+        commit: true
+
+    - name: Configure Route Redistribution
+      nclu:
+        commands:
+          - add bgp redistribute connected
+          - add bgp redistribute static
+        commit: true
+
+
+- hosts: cumulus-tor04
+
+  tasks:
+    - name: Set hostname.
+      nclu:
+        commands:
+          - add hostname TOR-04
+        commit: true
+    
+    - name: Add Interfaces towards NSX and Spine
+      nclu:
+        commands:
+          - add interface swp1
+          - add interface swp1.20
+          - add interface swp1.20 alias BGP to EN03 - EN04
+          - add interface swp1.20 ip address 172.16.20.21/24
+          
+          - add interface swp2
+          - add interface swp2.5
+          - add interface swp2.5 alias BGP to Cumulus Spine
+          - add interface swp2.5 ip address 172.16.5.21/24
+        commit: true 
+  
+    - name: Add BGP router & neighbors
+      nclu:
+        commands:
+          - add bgp autonomous-system 65201
+          - add bgp neighbor 172.16.20.3 remote-as 65001
+          - add bgp neighbor 172.16.20.4 remote-as 65001
+          - add bgp neighbor 172.16.5.1 remote-as 65500
+        commit: true
+
+    - name: Configure Route Redistribution
+      nclu:
+        commands:
+          - add bgp redistribute connected
+          - add bgp redistribute static
+        commit: true
+
+
+- hosts: cumulus-torspine
+
+  tasks:
+    - name: Set hostname.
+      nclu:
+        commands:
+          - add hostname TOR-SPINE
+        commit: true
+    
+    - name: Add Interfaces towards TOR
+      nclu:
+        commands:
+          - add interface swp1
+          - add interface swp1.2
+          - add interface swp1.2 alias BGP to Cisco C1111
+          - add interface swp1.2 ip address 172.16.2.2/24
+
+          - add interface swp2
+          - add interface swp2.5
+          - add interface swp2.5 alias BGP to Cumulus TOR
+          - add interface swp2.5 ip address 172.16.5.1/24
+        commit: true 
+  
+    - name: Add BGP router & neighbors
+      nclu:
+        commands:
+          - add bgp autonomous-system 65500
+          - add bgp neighbor 172.16.5.10 remote-as 65100
+          - add bgp neighbor 172.16.5.11 remote-as 65200
+          - add bgp neighbor 172.16.5.20 remote-as 65101
+          - add bgp neighbor 172.16.5.21 remote-as 65201
+          - add bgp neighbor 172.16.2.1 remote-as 64500
+        commit: true
+
+    - name: Configure Route Redistribution
+      nclu:
+        commands:
+          - add bgp redistribute connected
+          - add bgp redistribute static
+        commit: true
+

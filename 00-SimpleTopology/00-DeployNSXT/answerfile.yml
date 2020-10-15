@@ -1,0 +1,115 @@
+# Variables to be used for an automated NSX-T Deployment. #
+
+# Ansibe Variable 
+state_absent: "absent"
+state_present: "present"
+
+## ESXI and vCenter VARIABLES - INFRASTRUCTURE ##
+esxi_username: 'root'
+esxi_ip_address: '172.31.100.10'
+esxi_infrastructure_fqdn: 'srv-esxi-01.megasp.net'
+esxi_mgmt_01_fqdn: 'srv-esxi-01.megasp.net'
+esxi_compute_01_fqdn: 'srv-esxi-02.megasp.net'
+esxi_compute_02_fqdn: 'srv-esxi-03.megasp.net'
+vcenter_username: 'administrator@megasp.net'
+vcenter_password: ' '
+vcenter_virtual_machine_name: 'SRV-VCENTER-01'
+vcenter_hostname: 'srv-vcenter-01'
+vcenter_net_ip_address: '172.31.100.5'
+vcenter_net_prefix: '24'
+vcenter_net_gateway: '172.31.100.1'
+vcenter_dns_servers: '172.31.100.20'
+domain: 'megasp.net'
+searchpath: "nsxt_virtual_machine_name"
+vcsa_size: 'tiny'
+vcsa_ova_file: '/home/nmichel/lab-images/NSXT/VMware-vCenter-Server-Appliance-7.0.0.10300-16189094_OVF10.ova'
+datastore: 'Synology-NFS-Datastore'
+esxi_network: 'VM Network'
+datacenter_name: 'ATX-01'
+vds_name: 'ATX-VDS'
+vcenter_cluster: 'Management-Edge'
+cluster_name_edge: 'Management-Edge'
+cluster_name_compute: 'Compute'
+host_folder_name_edge: 'ATX-01-EDGE'
+host_folder_name_compute: 'ATX-01-COMPUTE'
+vm_folder_name_infrastructure: 'DC-INFRASTRUCTURE'
+vm_folder_name_nsx_infrastructure: 'NSX-INFRASTRUCTURE'
+vm_folder_name_tenant_01: 'COMPUTE-TENANT-01'
+vm_folder_name_tenant_02: 'COMPUTE-TENANT-02'
+
+
+## NSXT VARIABLES - DATA CENTER INFRASTRUCTURE ##
+nsxt_virtual_machine_name: "SRV-NSXT-MANAGER-01"
+nsxt_hostname: "srv-nsxt-manager-01"
+# nsxt_ova_file: "/home/nmichel/lab-images/NSXT/3.0/nsx-unified-appliance-3.0.0.0.0.15946739.ova" => 3.0 GA
+nsxt_ova_file: "/home/nmichel/lab-images/NSXT/3.1/BETA/nsx-unified-appliance-3.1.0.0.0.17007826.ova" # 3.1 BETA
+nsxt_ova_size: "small"
+nsxt_port_group: "DPG-VLAN100-MGMT-INFRASTRUCTURE"
+nsxt_audit_user: "audit" 
+nsxt_admin_user: "admin"
+nsxt_password: " "
+nsxt_ip_address: "x.x.x.x"
+nsxt_netmask: "255.255.255.0"
+nsxt_gateway: "x.x.x.x"
+nsxt_role: "NSX Manager"
+nsxt_datacenter: "ATX-01"
+nsxt_vm_folder: "ATX-01-EDGE"
+nsxt_compute_manager_display_name: "Home Lab vCenter"
+nsxt_compute_manager_origin_type: "vCenter"
+nsxt_compute_manager_credential_type: "UsernamePasswordLoginCredential"
+nsxt_validate_certs: False
+nsxt_license: "x.x.x.x"
+
+## NSXT VARIABLES - INFRASTRUCTURE ##
+nsxt_transportzone_overlay_display_name: "TZ-Overlay"
+nsxt_transportzone_vlan_display_name: "TZ-VLAN"
+nsxt_mtu: "9000"
+
+nsxt_ippool_tep_compute: "IPPool-IPV4-TEP-COMPUTE"
+nsxt_ippool_tep_edge: "IPPool-IPV4-TEP-EDGE"
+nsxt_named_teaming_policy_name_01: "TOR-1"
+nsxt_named_teaming_policy_name_02: "TOR-2"
+nsxt_teaming_policy_link01: "uplink-1"
+nsxt_teaming_policy_link02: "uplink-2"
+
+nsxt_transportnode_profile_name: "TNP-Compute"
+nsxt_uplink_teaming_policies: ["TOR-1", "TOR-2"]
+nsxt_edge_nvds_name: "EDGE-NVDS"
+nsxt_edge_DPG_data: "DPG-TRUNK"
+nsxt_edge_DPG_management: "DPG-VLAN100-MGMT-INFRASTRUCTURE"
+nsxt_edge_gateway: "x.x.x.x"
+nsxt_edge_01_name: "EDGE-01"
+nsxt_edge_02_name: "EDGE-02"
+nsxt_edge_03_name: "EDGE-03"
+nsxt_edge_04_name: "EDGE-04"
+nsxt_edge_05_name: "EDGE-05"
+nsxt_edge_06_name: "EDGE-06"
+nsxt_edge_01_display_name: "SRV-EDGE-01"
+nsxt_edge_02_display_name: "SRV-EDGE-02"
+nsxt_edge_03_display_name: "SRV-EDGE-03"
+nsxt_edge_04_display_name: "SRV-EDGE-04"
+nsxt_edge_05_display_name: "SRV-EDGE-05"
+nsxt_edge_06_display_name: "SRV-EDGE-06"
+nsxt_edge_01_ip: "x.x.x.x"
+nsxt_edge_02_ip: "x.x.x.x"
+nsxt_edge_03_ip: "x.x.x.x"
+nsxt_edge_04_ip: "x.x.x.x"
+nsxt_edge_05_ip: "x.x.x.x"
+nsxt_edge_06_ip: "x.x.x.x"
+nsxt_edge_cluster_01: "Edge-Cluster-01"
+nsxt_edge_cluster_02: "Edge-Cluster-02"
+nsxt_edge_cluster_03: "Edge-Cluster-03"
+nsxt_edge_data_networks_TOR_01: "DPG-TRUNK-TOR-01"
+nsxt_edge_data_networks_TOR_02: "DPG-TRUNK-TOR-02"
+
+## Cumulus - INFRASTRUCTURE ##
+
+vx_01_virtual_machine_name: "TOR-01"
+vx_02_virtual_machine_name: "TOR-02"
+vx_03_virtual_machine_name: "TOR-03"
+vx_04_virtual_machine_name: "TOR-04"
+vx_spine_virtual_machine_name: "TOR-SPINE"
+vx_ova_file: '/home/nmichel/lab-images/Cumulus/cumulus-linux-4.2.1-vx-amd64-vmware.ova'
+vx_management_port_group: "DPG-VLAN100-MGMT-INFRASTRUCTURE"
+vx_trunk_port_group: "DPG-TRUNK"
+
